@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Valentine 💘</title>
+  <title>Muskaan — Will you be my Valentine? 💘</title>
+
   <style>
     body{
       margin:0;
@@ -16,178 +17,112 @@
       overflow:hidden;
     }
     .card{
-      background: rgba(255,255,255,0.9);
-      border-radius: 22px;
-      padding: 26px;
-      width: min(560px, 92vw);
-      box-shadow: 0 12px 30px rgba(0,0,0,.12);
+      background:white;
+      border-radius:20px;
+      padding:26px;
+      width:min(520px,92vw);
+      box-shadow:0 10px 30px rgba(0,0,0,.15);
       text-align:center;
-      position: relative;
+      position:relative;
     }
     img{
-      width: 220px;
-      max-width: 70vw;
-      height: auto;
-      border-radius: 16px;
-      user-select: none;
-      -webkit-user-drag: none;
+      width:220px;
+      max-width:70vw;
     }
-    h1{
-      margin: 14px 0 8px;
-      font-size: 28px;
-    }
-    p{
-      margin: 0 0 18px;
-      opacity: .8;
-    }
-    .btnRow{
-      position: relative;
-      height: 90px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap: 14px;
-      flex-wrap: wrap;
+    .buttons{
+      position:relative;
+      height:90px;
     }
     button{
-      border: none;
-      padding: 12px 18px;
-      border-radius: 14px;
+      padding:12px 20px;
+      border-radius:14px;
+      border:none;
+      font-weight:bold;
       cursor:pointer;
-      font-weight: 700;
-      transition: transform .08s ease;
     }
-    button:active{ transform: scale(0.98); }
-
-    #yesBtn{
-      background: #16a34a;
-      color: #fff;
+    #yes{
+      background:#16a34a;
+      color:white;
     }
-    #noBtn{
-      background: #ef4444;
-      color:#fff;
-      position: absolute;
-      left: 55%;
-      top: 18px;
-      touch-action: none;
+    #no{
+      background:#ef4444;
+      color:white;
+      position:absolute;
+      left:55%;
+      top:20px;
     }
-
     .yay{
-      font-size: 52px;
-      color: #ff4fa3;
-      font-weight: 900;
-      margin-top: 10px;
-    }
-    .small{
-      font-size: 14px;
-      opacity: .7;
-      margin-top: 10px;
+      font-size:48px;
+      color:pink;
+      font-weight:900;
     }
   </style>
 </head>
 
 <body>
-  <div id="root"></div>
+<div id="root"></div>
 
-  <script type="module">
-    import React, { useEffect, useMemo, useRef, useState } from "https://esm.sh/react@18.2.0";
-    import { createRoot } from "https://esm.sh/react-dom@18.2.0/client";
+<script type="module">
+import React, {useRef,useState} from "https://esm.sh/react@18.2.0";
+import {createRoot} from "https://esm.sh/react-dom@18.2.0/client";
 
-    const NO_PHRASES = [
-      "No 💔",
-      "Pretty please? 🥺",
-      "But we'd be so cute together! 💕",
-      "One more chance, pookie?",
-      "Don't break my heart :(",
-      "What about a maybe?",
-      "Please don't do this to me, I'm fragile",
-    ];
+const NO_PHRASES=[
+"No 💔",
+"Pretty please? 🥺",
+"But we'd be so cute together 💕",
+"One more chance?",
+"Don't break my heart :(",
+"What about a maybe?",
+"I'm fragile 😭"
+];
 
-    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+function App(){
+  const [noClicks,setNo]=useState(0);
+  const [yes,setYes]=useState(false);
+  const noRef=useRef(null);
 
-    function App(){
-      const [noClicks, setNoClicks] = useState(0);
-      const [isValentine, setIsValentine] = useState(false);
+  const firstImg="https://media.tenor.com/VIChDQ6ejRQAAAAj/jumping-bear-hearts-no-png.gif";
+  const secondImg="https://media.tenor.com/f1xnRxTRxLAAAAAj/bears-with-kisses-bg.gif";
 
-      // ✅ Clamp growth so it doesn't break layout
-      const yesFontSize = clamp(18 + noClicks * 4, 18, 56);
+  const yesSize=Math.min(60,18+noClicks*4);
 
-      const firstImg  = "https://media.tenor.com/VIChDQ6ejRQAAAAj/jumping-bear-hearts-no-png.gif";
-      const secondImg = "https://media.tenor.com/f1xnRxTRxLAAAAAj/bears-with-kisses-bg.gif";
+  function moveNo(){
+    const b=noRef.current;
+    const x=Math.random()*(window.innerWidth-b.offsetWidth);
+    const y=Math.random()*(window.innerHeight-b.offsetHeight);
+    b.style.left=x+"px";
+    b.style.top=y+"px";
+  }
 
-      const noBtnRef = useRef(null);
+  return React.createElement("div",{className:"card"},
+    !yes ?
+    <>
+      <img src={firstImg}/>
+      <h1>Muskaan, will you be my Valentine? 💘</h1>
 
-      const noLabel = useMemo(() => {
-        if (noClicks === 0) return "No";
-        return NO_PHRASES[Math.min(noClicks - 1, NO_PHRASES.length - 1)];
-      }, [noClicks]);
+      <div className="buttons">
+        <button id="yes"
+          style={{fontSize:yesSize+"px"}}
+          onClick={()=>setYes(true)}>Yes 💚</button>
 
-      const moveNoButton = () => {
-        const btn = noBtnRef.current;
-        if (!btn) return;
+        <button id="no"
+          ref={noRef}
+          onMouseEnter={moveNo}
+          onClick={()=>{setNo(v=>v+1);moveNo();}}>
+          {noClicks===0?"No":NO_PHRASES[Math.min(noClicks-1,NO_PHRASES.length-1)]}
+        </button>
+      </div>
+    </>
+    :
+    <>
+      <img src={secondImg}/>
+      <div className="yay">Yay!!! 💖🎉</div>
+      <p>You’re officially my Valentine 😘</p>
+    </>
+  );
+}
 
-        const padding = 16;
-        const btnRect = btn.getBoundingClientRect();
-
-        // confine within viewport
-        const maxX = window.innerWidth - btnRect.width - padding;
-        const maxY = window.innerHeight - btnRect.height - padding;
-
-        const x = Math.random() * Math.max(padding, maxX);
-        const y = Math.random() * Math.max(padding, maxY);
-
-        btn.style.left = x + "px";
-        btn.style.top  = y + "px";
-      };
-
-      useEffect(() => {
-        // place it nicely on load
-        moveNoButton();
-        window.addEventListener("resize", moveNoButton);
-        return () => window.removeEventListener("resize", moveNoButton);
-      }, []);
-
-      const handleNo = () => {
-        setNoClicks(v => v + 1);
-        moveNoButton(); // run away after click/tap
-      };
-
-      const handleYes = () => setIsValentine(true);
-
-      return React.createElement(
-        "div",
-        { className: "card" },
-        !isValentine
-          ? React.createElement(React.Fragment, null,
-              React.createElement("img", { src: firstImg, alt: "cute" }),
-              React.createElement("h1", null, "Will you be my Valentine? 💘"),
-              React.createElement("p", null, "(You can try saying no… 😏)"),
-              React.createElement("div", { className: "btnRow" },
-                React.createElement("button", {
-                  id: "yesBtn",
-                  onClick: handleYes,
-                  style: { fontSize: yesFontSize + "px", padding: "12px 22px" }
-                }, "Yes 💚"),
-                React.createElement("button", {
-                  id: "noBtn",
-                  ref: noBtnRef,
-                  onClick: handleNo,
-                  onMouseEnter: moveNoButton,
-                  onTouchStart: moveNoButton
-                }, noLabel)
-              ),
-              React.createElement("div", { className: "small" }, "Tip: share the link after publishing on GitHub Pages.")
-            )
-          : React.createElement(React.Fragment, null,
-              React.createElement("img", { src: secondImg, alt: "yay" }),
-              React.createElement("div", { className: "yay" }, "Yay!!! 💖🎉"),
-              React.createElement("p", null, "Now you’re officially my Valentine 😘")
-            )
-      );
-    }
-
-    const rootEl = document.getElementById("root");
-    createRoot(rootEl).render(React.createElement(App));
-  </script>
+createRoot(document.getElementById("root")).render(React.createElement(App));
+</script>
 </body>
 </html>
